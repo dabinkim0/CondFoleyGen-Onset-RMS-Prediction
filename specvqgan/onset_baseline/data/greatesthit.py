@@ -55,20 +55,34 @@ class GreatestHitDataset(object):
 
         if self.max_sample > 0:
             self.list_sample = self.list_sample[0:self.max_sample]
+            
         self.list_sample = self.list_sample * self.repeat
 
         random.seed(1234)
         np.random.seed(1234)
-        num_sample = len(self.list_sample)
         
+        num_sample = len(self.list_sample)
         self.frame_rate = 15
         self.duration = 10.0
         
+        available_sample     = []
+        unavailable_sample = []
+        
         # Remove samples that have less than 10 seconds of frames
-        self.list_sample = [sample for sample in self.list_sample 
-                            if len(glob.glob(os.path.join('/home/dabin/video2foley/CondFoleyGen/data', 'greatesthit', 'greatesthit-process-resized', 
-                                                          sample.split('_')[0], 'frames', '*.jpg'))) >= self.frame_rate * self.duration]
-        print(f"Removed samples (less than {self.frame_rate * self.duration} frames) : {num_sample - len(self.list_sample)}")
+        for sample in self.list_sample:
+            frames_path = os.path.join('/home/dabin/video2foley/CondFoleyGen/data', 'greatesthit', 'greatesthit-process-resized', sample.split('_')[0], 'frames', '*.jpg')
+            if len(glob.glob(frames_path)) >= self.frame_rate * self.duration:
+                available_sample.append(sample)
+            else:
+                unavailable_sample.append(sample)
+                
+        self.list_sample = available_sample
+        self.list_discard = unavailable_sample
+        
+        # self.list_sample = [sample for sample in self.list_sample 
+        #                     if len(glob.glob(os.path.join('/home/dabin/video2foley/CondFoleyGen/data', 'greatesthit',    'greatesthit-process-resized', sample.split('_')[0], 'frames', '*.jpg'))) >= self.frame_rate * self.duration]
+        
+        print(f"Removed samples (less than {self.frame_rate * self.duration} frames) : {len(self.list_discard)}")
         
         if self.split == 'train':
             random.shuffle(self.list_sample)

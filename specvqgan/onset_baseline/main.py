@@ -52,7 +52,7 @@ def predict(args, net, batch, device):
 
 def train(args, device):
     # wandb
-    wandb.init(project='train_onset_net', name='onset_without_pretrained_10sec', config=args)
+    wandb.init(project='train_onset_net', name='onset_without_pretrained_2sec_weightdecay', config=args)
     
     # save dir
     gpus = torch.cuda.device_count()
@@ -219,6 +219,7 @@ def test(args, device):
 
 # 2sec setting
 # CUDA_VISIBLE_DEVICES=1 python main.py --exp='EXP_2sec' --epochs=300 --batch_size=32 --num_workers=8 --save_step=10 --valid_step=1 --lr=0.0001 --optim='Adam' --repeat=1 --schedule='cos'
+# CUDA_VISIBLE_DEVICES=1 python main.py --exp='EXP_2sec_16batch' --epochs=300 --batch_size=16 --num_workers=8 --save_step=10 --valid_step=1 --lr=0.0001 --optim='Adam' --repeat=1 --schedule='cos'
 
 # 10sec setting
 # CUDA_VISIBLE_DEVICES=1 python main.py --exp='EXP_10sec' --epochs=300 --batch_size=6 --num_workers=8 --save_step=10 --valid_step=1 --lr=0.0001 --optim='Adam' --repeat=1 --schedule='cos'

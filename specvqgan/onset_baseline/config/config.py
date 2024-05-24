@@ -33,7 +33,9 @@ def init_args(return_parser=False):
     # optimizer parameters
     parser.add_argument('--lr', default=1e-4, type=float, help='learning rate')
     parser.add_argument('--momentum', type=float, default=0.9)
-    parser.add_argument('--weight_decay', default=5e-4,
+    # parser.add_argument('--weight_decay', default=5e-4,
+                        # type=float, help='weight decay (default: 5e-4)')
+    parser.add_argument('--weight_decay', default=1e-3,
                         type=float, help='weight decay (default: 5e-4)')
     parser.add_argument('--optim', type=str, default='Adam',
                         choices=['SGD', 'Adam'])

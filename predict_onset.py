@@ -104,7 +104,9 @@ def eval_osnets(onset1, onset2, wav2, delta=0.1, conf_interval=int(0.05*22050), 
     for o in onset2_onuse:
         y_gt.append(0)
         y_pred.append(np.max(wav2[o-conf_interval:o+conf_interval]))
+        
     acc = hit_cnt / len(onset1) if len(onset1) != 0 else 0
+    
     ap = average_precision_score(y_gt, y_pred)
     pr, rc, th = precision_recall_curve(y_gt, y_pred)
     if keys != None and args.plt:

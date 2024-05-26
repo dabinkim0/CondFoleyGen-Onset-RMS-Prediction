@@ -1,2 +1,2 @@
-from .greatesthit_2sec import *
+from .greatesthit import *
 from .impactset import *

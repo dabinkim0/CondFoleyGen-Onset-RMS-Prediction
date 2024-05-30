@@ -99,7 +99,7 @@ def train(args, device):
         else:
             trainset += data.VideoAudioDataset(*dirs, config.data, split='train')
     train_loader = DataLoader(trainset, num_workers=args.num_workers, shuffle=True,
-                              batch_size=args.batch_size, pin_memory=True, drop_last=False)
+                              batch_size=args.batch_size, pin_memory=True, drop_last=True)
     for dirs in zip(config.data.test_files, config.data.frame_dirs, config.data.audio_dirs):
         if valset is None:
             valset = data.VideoAudioDataset(*dirs, config.data, split='valid')
@@ -260,6 +260,9 @@ def test(args, device):
 
 if __name__ == '__main__':
     print("CUDA is available: ", torch.cuda.is_available())
+    torch.manual_seed(config.train.seed)
+    torch.cuda.manual_seed(config.train.seed)
+    
     args = init_args()
     if args.test_mode:
         test(args, DEVICE)

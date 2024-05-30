@@ -155,7 +155,19 @@ class VideoAudioDataset(torch.utils.data.Dataset):
         frame_list.sort()
         frame_list = frame_list[0:int(self.video_samples)]
         
+        # if len(frame_list) < self.video_samples:  # 299/369 81%
+            # print("Frame directory: ", frame_path)
+            # print("Video sample: ", video_id)
+            # print("Frame list length: ", len(frame_list))
+
+        # try:
         imgs = self.read_image(frame_list)      # torch.Size([3, 150, 112, 112])
+        # print("imgs shape: ", imgs.shape)
+        # except Exception as e:
+        #     print("Error: ", e)
+        #     print("frame_path: ", frame_path)
+        #     print("video_id: ", video_id)
+        #     print("frame_list: ", frame_list)
     
         # padding
         if imgs.shape[1] < self.video_samples:
@@ -163,13 +175,12 @@ class VideoAudioDataset(torch.utils.data.Dataset):
             imgs_padded[:, 0:imgs.shape[1], :, :] = imgs
         else:
             imgs_padded = imgs[:, 0:self.video_samples, :, :]
-            
+                        
         if imgs_padded.shape[1] != self.video_samples:
             raise RuntimeError(f"imgs_padded length is not equal to video_samples: {imgs_padded.shape[1]} != {self.video_samples}")
             
         
         audio, audio_sample_rate = sf.read(audio_path, start=0, stop=1000, dtype='float64', always_2d=True)
-        
         audio_len = int(self.duration * audio_sample_rate)
         audio, audio_rate = sf.read(audio_path, start=0, stop=audio_len, dtype='float64', always_2d=True)
         audio = audio.mean(-1)
@@ -178,7 +189,8 @@ class VideoAudioDataset(torch.utils.data.Dataset):
         onsets = np.rint(onsets * self.frame_rate).astype(int)
         # onsets[onsets>29] = 29
         onsets[onsets > (self.video_samples - 1)] = self.video_samples - 1
-        label = torch.zeros(len(frame_list))
+        # label = torch.zeros(len(frame_list))
+        label = torch.zeros(self.video_samples)
         label[onsets] = 1
 
         batch = {
@@ -188,6 +200,8 @@ class VideoAudioDataset(torch.utils.data.Dataset):
         return batch
         
     def read_image(self, frame_list):
+        if not len(frame_list) > 0:
+            raise RuntimeError(f"frame_list length is less than 0: {len(frame_list)}")
         imgs = []
         convert_tensor = transforms.ToTensor()
         for img_path in frame_list:
@@ -196,7 +210,13 @@ class VideoAudioDataset(torch.utils.data.Dataset):
             imgs.append(image.unsqueeze(0))
         # (T, C, H ,W)
         # print(len(imgs)) # 151
+        # try:
         imgs = torch.cat(imgs, dim=0).squeeze()
+        # except Exception as e:
+        #     print("Error: ", e)
+        #     print("frame_list: ", frame_list)
+        #     print("imgs length: ", len(imgs))
+        #     print("imgs shape: ", imgs.shape)
         imgs = self.video_transform(imgs)
         imgs = imgs.permute(1, 0, 2, 3)
         # (C, T, H ,W)
@@ -375,8 +395,7 @@ class GreatestHitDataset(object):
             image = convert_tensor(image)
             imgs.append(image.unsqueeze(0))
         # (T, C, H ,W)
-        print("len of imgs: ", len(imgs)) # 151
-        imgs = torch.cat(imgs, dim=0).squeeze()
+        imgs = torch.cat(imgs, dim=0).squeeze()     # error
         imgs = self.video_transform(imgs)
         imgs = imgs.permute(1, 0, 2, 3)
         # (C, T, H ,W)

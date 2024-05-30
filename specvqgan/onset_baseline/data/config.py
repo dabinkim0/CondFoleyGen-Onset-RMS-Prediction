@@ -64,14 +64,14 @@ _C.data.flow_feature_dirs = [f"/mnt/GreatestHits/features/{material}/feature_flo
 # features for r2plus1d
 _C.data.rgb_feature_dirs = [f"/mnt/GreatestHits/features/{material}/feature_rgb_r2plus1d_dim512_30fps" 
                             for material in materials]
-_C.data.frame_dirs = [f"/mnt/GreatestHits/features/{material}/OF_10s_15fps" 
+_C.data.frame_dirs = [f"/mnt/GreatestHits/features/{material}/OF_10s_30fps" 
                             for material in materials]
 _C.data.audio_dirs = [f"/mnt/GreatestHits/features/{material}/audio_10s_16000hz" 
                       for material in materials]
 
 
 _C.data.mel_dirs = [f"/mnt/GreatestHits/features/{material}/melspec_10s_16000hz" for material in materials]
-_C.data.frame_rate = 15
+_C.data.frame_rate = 30
 _C.data.duration = 10
 _C.data.video_samples = _C.data.frame_rate * _C.data.duration
 _C.data.audio_samples = 10

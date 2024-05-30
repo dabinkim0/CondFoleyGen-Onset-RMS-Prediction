@@ -37,8 +37,10 @@ def init_args(return_parser=False):
                         # type=float, help='weight decay (default: 5e-4)')
     parser.add_argument('--weight_decay', default=1e-3,
                         type=float, help='weight decay (default: 5e-4)')
-    parser.add_argument('--optim', type=str, default='Adam',
-                        choices=['SGD', 'Adam'])
+    # parser.add_argument('--optim', type=str, default='Adam',
+    #                     choices=['SGD', 'Adam'])
+    parser.add_argument('--optim', type=str, default='AdamW',
+                        choices=['SGD', 'Adam', 'AdamW'])
     parser.add_argument('--schedule', type=str, default='cos', choices=['none', 'cos', 'step'], required=False)
 
     parser.add_argument('--aug_img', default=False, action='store_true')

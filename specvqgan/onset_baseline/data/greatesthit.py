@@ -65,7 +65,7 @@ class GreatestHitDataset(object):
         self.frame_rate = 15
         self.duration = 10.0
         
-        available_sample     = []
+        available_sample = []
         unavailable_sample = []
         
         # Remove samples that have less than 10 seconds of frames

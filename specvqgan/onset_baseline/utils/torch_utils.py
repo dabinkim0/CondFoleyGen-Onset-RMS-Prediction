@@ -99,6 +99,13 @@ def make_optimizer(model, args):
             lr=args.lr,
             weight_decay=args.weight_decay,
         )
+    # Add AdamW for the SyncFusion setting
+    elif args.optim == 'AdamW':
+        optimizer = torch.optim.AdamW(
+            filter(lambda p: p.requires_grad, model.parameters()),
+            lr=args.lr,
+            weight_decay=args.weight_decay,
+        )
     return optimizer
 
 
